@@ -37,7 +37,6 @@ function App() {
       <br />
       <SearchInput
         setSearchQuery={(e) => {
-          console.log('fire');
           setSetSearchQuery(e);
         }}
       />
@@ -53,14 +52,18 @@ function App() {
           <Filters
             properties={widgetFilterProperty}
             onChangeFilter={(property) => {
-              const matchingWidgetFilter = widgetFilterProperty.filter((wf) => wf.property === property.property);
-              !!matchingWidgetFilter.length
-                ? setWidgetFilterProperty((wpf) => [
-                    ...wpf.filter(
-                      (w) => w.property !== property.property && w.isTruthySelected !== property.isTruthySelected
-                    ),
-                  ])
-                : setWidgetFilterProperty((wp) => [...wp, property]);
+              const propertyMatch = widgetFilterProperty.some((wf) => wf.property === property.property);
+              const fullMatch = widgetFilterProperty.some(
+                (wf) => wf.property === property.property && wf.isTruthySelected === property.isTruthySelected
+              );
+
+              if (fullMatch) {
+                setWidgetFilterProperty((wpf) => [...wpf.filter((w) => w.property !== property.property)]);
+              } else if (propertyMatch) {
+                setWidgetFilterProperty((wpf) => [...wpf.filter((w) => w.property !== property.property), property]);
+              } else {
+                setWidgetFilterProperty((wp) => [...wp, property]);
+              }
             }}
             object={widgets[0]}
           />
@@ -85,18 +88,22 @@ function App() {
           <Filters
             properties={peopleFilterProperty}
             onChangeFilter={(property) => {
-              const matchingFilter = peopleFilterProperty.filter(
+              const isMatchingProperty = peopleFilterProperty.some(
+                (peopleProperty) => peopleProperty.property === property.property
+              );
+
+              const isFullMatchProperty = peopleFilterProperty.some(
                 (peopleProperty) =>
                   peopleProperty.property === property.property &&
                   peopleProperty.isTruthySelected === property.isTruthySelected
               );
-              matchingFilter.length > 0
-                ? setPeopleFilterProperty((pf) => [
-                    ...pf.filter(
-                      (p) => p.property !== property.property && p.isTruthySelected !== property.isTruthySelected
-                    ),
-                  ])
-                : setPeopleFilterProperty((p) => [...p, property]);
+              if (isFullMatchProperty) {
+                setPeopleFilterProperty((pf) => [...pf.filter((p) => p.property !== property.property)]);
+              } else if (isMatchingProperty) {
+                setPeopleFilterProperty((pf) => [...pf.filter((p) => p.property !== property.property), property]);
+              } else {
+                setPeopleFilterProperty((p) => [...p, property]);
+              }
             }}
             object={people[0]}
           />
