@@ -1,8 +1,9 @@
 import React from 'react';
+import IProperty from '../interfaces/IProperty';
 
 interface ISortersProps<T> {
   object: T;
-  setProperty: (key: keyof T) => void;
+  setProperty: (propertyType: IProperty<T>) => void;
 }
 
 export default function Sorters<T>({ object, setProperty }: ISortersProps<T>) {
@@ -14,12 +15,25 @@ export default function Sorters<T>({ object, setProperty }: ISortersProps<T>) {
       <select
         id="sorters"
         className="form-control full-width"
-        onChange={(e) => setProperty(e.target.value as any)}
+        onChange={(e) => {
+          const values = e.target.value.split('-');
+          if (values.length === 2) {
+            setProperty({
+              property: values[0] as any,
+              isDescending: values[1] === 'true',
+            });
+          }
+        }}
       >
         {Object.keys(object).map((key) => (
-          <option key={key} value={key}>
-            Sort by {key}
-          </option>
+          <>
+            <option key={`${key}-true`} value={`${key}-true`}>
+              Sort by {key} descending
+            </option>
+            <option key={`${key}-false`} value={`${key}-false`}>
+              Sort by {key} ascending
+            </option>
+          </>
         ))}
       </select>
     </>
