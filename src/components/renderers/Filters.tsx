@@ -1,15 +1,12 @@
-import { useState } from 'react';
 import IFilters from '../../interfaces/IFilters';
-import PropsWithChildrenFunction from '../../types/PropsWithChildrenFunction';
-import genericFilter from '../../utils/genericFilter';
 
 interface Props<T> {
   dataSource: Array<T>;
+  filterProperties: Array<IFilters<T>>;
+  setFilterProperties(filterProperties: Array<IFilters<T>>): void;
 }
 
-export default function Filters<T>({ dataSource, children }: PropsWithChildrenFunction<Props<T>, T>) {
-  const [filterProperties, setFilterProperties] = useState<Array<IFilters<T>>>([]);
-
+export default function Filters<T>({ dataSource, filterProperties, setFilterProperties }: Props<T>) {
   const object = dataSource.length > 0 ? dataSource[0] : [];
 
   function handleOnchangeFilter(property: IFilters<T>) {
@@ -20,11 +17,11 @@ export default function Filters<T>({ dataSource, children }: PropsWithChildrenFu
         peopleProperty.property === property.property && peopleProperty.isTruthySelected === property.isTruthySelected
     );
     if (isFullMatchProperty) {
-      setFilterProperties((pf) => [...pf.filter((p) => p.property !== property.property)]);
+      setFilterProperties([...filterProperties.filter((p) => p.property !== property.property)]);
     } else if (isMatchingProperty) {
-      setFilterProperties((pf) => [...pf.filter((p) => p.property !== property.property), property]);
+      setFilterProperties([...filterProperties.filter((p) => p.property !== property.property), property]);
     } else {
-      setFilterProperties((p) => [...p, property]);
+      setFilterProperties([...filterProperties, property]);
     }
   }
 
@@ -54,10 +51,6 @@ export default function Filters<T>({ dataSource, children }: PropsWithChildrenFu
             className="m-1 ml-3"
           />
           <label key={`${key}-false-${i}`}>{key} is falsy</label>
-
-          {children && dataSource
-            ? dataSource.filter((person) => genericFilter(person, filterProperties)).map((item) => children(item))
-            : []}
         </>
       ))}
     </div>
