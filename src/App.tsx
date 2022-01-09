@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import Filters from './components/renderers/Filters';
 import PersonRender from './components/renderers/PersonRender';
 import WidgetRender from './components/renderers/WidgetRender';
-import SearchInput from './components/SearchInput';
-import Sorters from './components/Sorters';
+import SearchSortAndFilter from './components/SearchSortAndFilter';
 import people from './mock-data/people';
 import widgets from './mock-data/widgets';
 
@@ -18,28 +16,28 @@ function App() {
       </button>
       <br />
       {!showPeople && (
-        <>
-          <h2>Widgets</h2>
-          <SearchInput dataSource={widgets} searchKeys={[]}>
-            {(widget) => <WidgetRender {...widget} />}
-          </SearchInput>
-          <Sorters dataSource={widgets} initialSortProperty={'title'}>
-            {(widget) => <WidgetRender {...widget} />}
-          </Sorters>
-          <Filters dataSource={widgets}>{(widget) => <WidgetRender {...widget} />}</Filters>
-        </>
+        <SearchSortAndFilter
+          dataSource={widgets}
+          initialFilterProperties={[]}
+          initialSearchQuery=""
+          initialSortProperty={{ property: 'title', isDescending: true }}
+          searchProperties={['title', 'description']}
+          title="Widgets"
+        >
+          {(widget) => <WidgetRender {...widget} />}
+        </SearchSortAndFilter>
       )}
       {showPeople && (
-        <>
-          <h2>People</h2>
-          <SearchInput dataSource={people} searchKeys={[]}>
-            {(person) => <PersonRender {...person} />}
-          </SearchInput>
-          <Sorters dataSource={people} initialSortProperty={'firstName'}>
-            {(person) => <PersonRender {...person} />}
-          </Sorters>
-          <Filters dataSource={people}>{(person) => <PersonRender {...person} />}</Filters>
-        </>
+        <SearchSortAndFilter
+          dataSource={people}
+          initialFilterProperties={[]}
+          initialSearchQuery="firstName"
+          initialSortProperty={{ property: 'firstName', isDescending: true }}
+          searchProperties={['firstName', 'lastName']}
+          title="People"
+        >
+          {(person) => <PersonRender {...person} />}
+        </SearchSortAndFilter>
       )}
     </div>
   );
