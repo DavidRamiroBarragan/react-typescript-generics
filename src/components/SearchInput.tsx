@@ -4,12 +4,11 @@ import PropsWithChildrenFunction from '../types/PropsWithChildrenFunction';
 import genericSearch from '../utils/genericSearch';
 
 interface ISearchInputProps<T> {
-  dataSource: Array<T>;
-  searchKeys: Array<keyof T>;
+  setSetSearchQuery(searchQuery: string): void;
 }
-function SearchInput<T>({ dataSource, searchKeys, children }: PropsWithChildrenFunction<ISearchInputProps<T>, T>) {
-  const [searchQuery, setSetSearchQuery] = useState<string>('');
-  const debouncedQuery = useDebounce(searchQuery, 250);
+function SearchInput<T>({ setSetSearchQuery }: ISearchInputProps<T>) {
+  const [query, setQuery] = useState<string>('');
+  const debouncedQuery = useDebounce(query, 250);
 
   useEffect(() => {
     setSetSearchQuery(debouncedQuery);
@@ -29,9 +28,6 @@ function SearchInput<T>({ dataSource, searchKeys, children }: PropsWithChildrenF
         aria-label="Search"
         onChange={(event) => setSetSearchQuery(event.target.value)}
       />
-      {children && dataSource
-        ? dataSource.filter((widget) => genericSearch(widget, searchKeys, searchQuery)).map((item) => children(item))
-        : []}
     </>
   );
 }
