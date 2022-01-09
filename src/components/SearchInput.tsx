@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
+import PropsWithChildrenFunction from '../types/PropsWithChildrenFunction';
+import genericSearch from '../utils/genericSearch';
 
-interface ISearchInputProps {
-  setSearchQuery: (searchQuery: string) => void;
+interface ISearchInputProps<T> {
+  dataSource: Array<T>;
+  searchKeys: Array<keyof T>;
 }
-function SearchInput({ setSearchQuery }: ISearchInputProps) {
-  const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query, 250);
+function SearchInput<T>({ dataSource, searchKeys, children }: PropsWithChildrenFunction<ISearchInputProps<T>, T>) {
+  const [searchQuery, setSetSearchQuery] = useState<string>('');
+  const debouncedQuery = useDebounce(searchQuery, 250);
 
   useEffect(() => {
-    setSearchQuery(debouncedQuery);
-  }, [debouncedQuery, setSearchQuery]);
+    setSetSearchQuery(debouncedQuery);
+  }, [debouncedQuery, setSetSearchQuery]);
 
   return (
     <>
@@ -24,8 +27,11 @@ function SearchInput({ setSearchQuery }: ISearchInputProps) {
         className="form-control full-width"
         placeholder="Search"
         aria-label="Search"
-        onChange={(event) => setQuery(event.target.value)}
+        onChange={(event) => setSetSearchQuery(event.target.value)}
       />
+      {children && dataSource
+        ? dataSource.filter((widget) => genericSearch(widget, searchKeys, searchQuery)).map((item) => children(item))
+        : []}
     </>
   );
 }
