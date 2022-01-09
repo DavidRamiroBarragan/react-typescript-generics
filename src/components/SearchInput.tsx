@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 
-interface ISearchInputProps<T> {
+interface ISearchInputProps {
   setSetSearchQuery(searchQuery: string): void;
   searchQuery: string;
 }
-function SearchInput<T>({ setSetSearchQuery, searchQuery }: ISearchInputProps<T>) {
+function SearchInput({ setSetSearchQuery, searchQuery }: ISearchInputProps) {
   const [query, setQuery] = useState<string>(searchQuery);
   const debouncedQuery = useDebounce(query, 250);
 
   useEffect(() => {
     setSetSearchQuery(debouncedQuery);
-  }, [debouncedQuery, setSetSearchQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedQuery]);
 
   return (
     <>

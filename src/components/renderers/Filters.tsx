@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import IFilters from '../../interfaces/IFilters';
 
 interface Props<T> {
@@ -29,7 +30,7 @@ export default function Filters<T>({ dataSource, filterProperties, setFilterProp
     <div className="p-1 my-2">
       <label htmlFor="filters">Filters!! Try us 😉</label>
       {Object.keys(object).map((key, i) => (
-        <>
+        <Fragment key={i}>
           <input
             type="checkbox"
             name=""
@@ -51,7 +52,7 @@ export default function Filters<T>({ dataSource, filterProperties, setFilterProp
             className="m-1 ml-3"
           />
           <label key={`${key}-false-${i}`}>{key} is falsy</label>
-        </>
+        </Fragment>
       ))}
     </div>
   );

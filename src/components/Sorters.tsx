@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import ISorters from '../interfaces/ISorters';
 
 interface ISortersProps<T> {
@@ -25,15 +26,15 @@ export default function Sorters<T>({ dataSource, setSorProperty }: ISortersProps
           }
         }}
       >
-        {Object.keys(object).map((key) => (
-          <>
+        {Object.keys(object).map((key, i) => (
+          <Fragment key={i}>
             <option key={`${key}-true`} value={`${key}-true`}>
               Sort by {key} descending
             </option>
             <option key={`${key}-false`} value={`${key}-false`}>
               Sort by {key} ascending
             </option>
-          </>
+          </Fragment>
         ))}
       </select>
     </>

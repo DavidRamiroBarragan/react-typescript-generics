@@ -24,19 +24,19 @@ function App() {
           searchProperties={['title', 'description']}
           title="Widgets"
         >
-          {(widget) => <WidgetRender {...widget} />}
+          {(widget) => <WidgetRender {...widget} key={widget.id} />}
         </SearchSortAndFilter>
       )}
       {showPeople && (
         <SearchSortAndFilter
           dataSource={people}
           initialFilterProperties={[]}
-          initialSearchQuery="firstName"
+          initialSearchQuery=""
           initialSortProperty={{ property: 'firstName', isDescending: true }}
           searchProperties={['firstName', 'lastName']}
           title="People"
         >
-          {(person) => <PersonRender {...person} />}
+          {(person) => <PersonRender {...person} key={person.id} />}
         </SearchSortAndFilter>
       )}
     </div>
