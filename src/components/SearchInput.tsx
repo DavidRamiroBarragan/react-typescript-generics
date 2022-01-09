@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
-import PropsWithChildrenFunction from '../types/PropsWithChildrenFunction';
-import genericSearch from '../utils/genericSearch';
 
 interface ISearchInputProps<T> {
   setSetSearchQuery(searchQuery: string): void;
+  searchQuery: string;
 }
-function SearchInput<T>({ setSetSearchQuery }: ISearchInputProps<T>) {
-  const [query, setQuery] = useState<string>('');
+function SearchInput<T>({ setSetSearchQuery, searchQuery }: ISearchInputProps<T>) {
+  const [query, setQuery] = useState<string>(searchQuery);
   const debouncedQuery = useDebounce(query, 250);
 
   useEffect(() => {
@@ -23,10 +22,11 @@ function SearchInput<T>({ setSetSearchQuery }: ISearchInputProps<T>) {
         type="text"
         name="search"
         id="search"
+        value={query}
         className="form-control full-width"
         placeholder="Search"
         aria-label="Search"
-        onChange={(event) => setSetSearchQuery(event.target.value)}
+        onChange={(event) => setQuery(event.target.value)}
       />
     </>
   );

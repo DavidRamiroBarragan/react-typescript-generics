@@ -46,6 +46,7 @@ export default function SearchSortAndFilter<T>({
       <>
         <h2>{title}</h2>
         <SearchInput
+          searchQuery={searchQuery}
           setSetSearchQuery={(searchQuery) =>
             setSearchAndSortState((state) => ({
               ...state,
